@@ -132,7 +132,10 @@ for newGateway_dir in newGate_subdir:
             gateway_sub = f.nlst()
             print(gateway_sub)
             for gate_zip in gateway_sub:
-                print(gate_zip)
+                if 'rar' in gate_zip:
+                    gateway_sub.remove(gate_zip)
+
+            for gate_zip in gateway_sub:
                 if gate_to_search in gate_zip:
                     print('ok')
                     download(f,'d:\\'+gate_zip)
