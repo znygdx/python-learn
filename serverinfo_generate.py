@@ -45,7 +45,7 @@ for i in range(0,len(L)):
     #print(total_version)
 for j in total_version:
    # version_num1 = re.compile(r'\d\.\d.\d.\d').search(j).group()
-    version_num1 = re.search(r'\d\.\d.\d*.\d',j).group()
+    version_num1 = re.search(r'\d\.\d.\d*.\d\d*',j).group()
     total_version_finally.append(version_num1)
 #print(len(total_version_finally))
 #取出来每个网关目录的主程序(total_file_ingate)和配置文件(total_file_ingatecfgnew)，分别生成列表
@@ -60,7 +60,7 @@ for i in range(0,len(L)):
     total_file_ingate.append(new_file_ingate1)
     total_file_ingatecfg.append(new_file_ingate3)
 total_file_ingatecfgnew1 = [i.split(',') for i in total_file_ingatecfg]
-print(total_file_ingatecfgnew1)
+#print(total_file_ingatecfgnew1)
 total_file_ingatecfgnew2 =[]
 for i in range(0,len(total_file_ingatecfgnew1)):
     total_file_ingatecfgnew2 += total_file_ingatecfgnew1[i]
@@ -99,13 +99,33 @@ for i in range(0,len(total_final)):
         serv_list.insert(serv_list.index('@'),'@')
         serv_str = ''.join(serv_list)
         total_final[i]=serv_str
-print(total_final)
+#print(total_final)
+''''#下边是修订10处理逻辑
+#对packageversion
+total_final.append('PackageVersion@9.2.10@')
+#对脚本md5处理
+total_final.append('TapDataBaseAfter@9.2.10@c17982222499b50944734538ef1b382e')'''
 
+#下边是修订31处理逻辑
 #对packageversion
 total_final.append('PackageVersion@9.3.1@')
 #对脚本md5处理
 total_final.append('TapDataBaseAfter@9.3.1@c17982222499b50944734538ef1b382e')
+
 #对动态库版本处理
+servlib = {'libt2sdkWrapper.so@@1c4b130788f8a58aa3f6f4e1a77b7aa8':'libt2sdkWrapper.so@3.7.1.6@1c4b130788f8a58aa3f6f4e1a77b7aa8','libquickfix3_1.so@@31bc3926e8e2d520d6c8cd9d4062c4af':'libquickfix3_1.so@9.3.0.2@31bc3926e8e2d520d6c8cd9d4062c4af','libiTapTradeAPI.so@@91e33c478755939bc58a020d5fb88653':'libiTapTradeAPI.so@9.2.9.6@91e33c478755939bc58a020d5fb88653','libcurl.so.4@@d105a44fa19326b3fdfac85009e85250':'libcurl.so.4@1.2.0.4@d105a44fa19326b3fdfac85009e85250'}
+total_finally = [servlib[i] if i in servlib else i for i in total_final]
+print(total_finally)
+total_finally_last = list(filter(lambda x:re.search('libthosttraderapi_se\.so.*|libcrypto\.so.*|libssl\.so.*|libz\.so.*',x)==None,total_finally))
+print(total_finally_last)
+
+
+
+print('总共%d行' % len(total_finally_last))
+# with open('d:\\2019\\total.txt','w') as f:
+#     for i in total_finally_last:
+#         f.write(i)
+        # f.write('\r\n')
 
 
 class TServerInfoVersion(Structure):
@@ -117,7 +137,7 @@ class TServerInfoVersion(Structure):
     ]
 
 total_bytes=[]
-for i in total_final:
+for i in total_finally_last:
     a=TServerInfoVersion()
     a.ServerName = i.split('@',1)[0].encode('utf-8')
     a.ServerVersion = i.split('@',2)[1].encode('utf-8')
