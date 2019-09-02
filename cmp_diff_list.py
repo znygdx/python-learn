@@ -14,7 +14,7 @@ def comp(file1,file2):
     file1_diff = [x for x in unqual_item if x in lines1]
     file2_diff = [y for y in unqual_item if y in lines2]
 
-    return(file1_diff,file2_diff)
+    return(('%s的不同是：'% (file1),file1_diff),'%s的不同是：'%(file2),file2_diff)
 
 
 if __name__ == '__main__':
